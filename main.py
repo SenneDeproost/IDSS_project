@@ -7,6 +7,7 @@ from sklearn.feature_selection import chi2
 import hashlib
 import ctypes
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn import tree
 import matplotlib.pyplot as plt
 
 data_dirname = "./data/"
@@ -30,7 +31,7 @@ for col in data:
 
 
 # https://towardsdatascience.com/feature-selection-techniques-in-machine-learning-with-python-f24e7da3f36e
-target = 'totalCritical'
+target = 'zip'
 X = data.loc[:, data.columns != target]  #independent columns
 y = data[target]    #target column i.e price range
 
@@ -47,12 +48,14 @@ print(featureScores.nlargest(20,'Score'))  #print 10 best features
 
 
 # ----------------------------------
-
-model = ExtraTreesClassifier()
+model = tree.DecisionTreeClassifier(max_depth=2)
+#model = ExtraTreesClassifier()
 model.fit(X,y)
 print(model.feature_importances_) #use inbuilt class feature_importances of tree based classifiers
 #plot graph of feature importances for better visualization
 feat_importances = pd.Series(model.feature_importances_, index=X.columns)
-feat_importances.nlargest(20).plot(kind='barh')
+print(feat_importances.nlargest(30))
+feat_importances.nlargest(30).plot(kind='barh')
+tree.plot_tree(model)  
 plt.show()
 
