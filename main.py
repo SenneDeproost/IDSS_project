@@ -22,7 +22,7 @@ data = pd.read_csv(data_dirname+data_filename)
 #def hash(string):
 	#return abs(hash(string)) % (10 ** 8)
 
-
+"""
 for col in data:
 	data[col] = abs(data[col].apply(hash))
 
@@ -31,7 +31,7 @@ for col in data:
 
 
 # https://towardsdatascience.com/feature-selection-techniques-in-machine-learning-with-python-f24e7da3f36e
-target = 'zip'
+target = 'category'
 X = data.loc[:, data.columns != target]  #independent columns
 y = data[target]    #target column i.e price range
 
@@ -48,14 +48,48 @@ print(featureScores.nlargest(20,'Score'))  #print 10 best features
 
 
 # ----------------------------------
-model = tree.DecisionTreeClassifier(max_depth=2)
-#model = ExtraTreesClassifier()
+#model = tree.DecisionTreeClassifier(max_depth=200)
+model = ExtraTreesClassifier()
 model.fit(X,y)
 print(model.feature_importances_) #use inbuilt class feature_importances of tree based classifiers
 #plot graph of feature importances for better visualization
 feat_importances = pd.Series(model.feature_importances_, index=X.columns)
 print(feat_importances.nlargest(30))
 feat_importances.nlargest(30).plot(kind='barh')
-tree.plot_tree(model)  
-plt.show()
+#tree.plot_tree(model)  
+#plt.show()
 
+
+#-----------------------------
+X_new = pd.DataFrame(columns=['pe', 'peDesc', 'description'])
+X_new["pe"] = data["pe"]
+X_new["peDesc"] = data["peDesc"]
+X_new["description"] = data["description"]
+
+print(X_new)
+
+corrmat = X_new.corr()
+top_corr_features = corrmat.index
+plt.figure(figsize=(20,20))
+#plot heat map
+g=sns.heatmap(data[top_corr_features].corr(),annot=True,cmap="RdYlGn")
+#plt.show()
+
+
+"""
+
+
+# ---------------------------------------
+ids = data['facilityId'][1:]
+seen = set()
+uniq = []
+double = []
+for x in ids:
+    if x not in seen:
+        uniq.append(x)
+        seen.add(x)
+    else:
+    	double.append(x)
+
+print(len(uniq))
+print(double)
