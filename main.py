@@ -20,9 +20,9 @@ data = pd.read_csv(data_dirname+data_filename)
 #print (data.dtypes)
 
 #def hash(string):
-	#return abs(hash(string)) % (10 ** 8)
+#	return abs(hash(string)) % (10 ** 8)
 
-"""
+
 for col in data:
 	data[col] = abs(data[col].apply(hash))
 
@@ -31,11 +31,11 @@ for col in data:
 
 
 # https://towardsdatascience.com/feature-selection-techniques-in-machine-learning-with-python-f24e7da3f36e
-target = 'category'
+target = 'numberOfFbiCritical'
 X = data.loc[:, data.columns != target]  #independent columns
-y = data[target]    #target column i.e price range
+y = data[target]    # target
 
-
+"""
 #apply SelectKBest class to extract top 10 best features
 bestfeatures = SelectKBest(score_func=chi2, k=20)
 fit = bestfeatures.fit(X,y)
@@ -45,7 +45,7 @@ dfcolumns = pd.DataFrame(X.columns)
 featureScores = pd.concat([dfcolumns,dfscores],axis=1)
 featureScores.columns = ['Specs','Score']  #naming the dataframe columns
 print(featureScores.nlargest(20,'Score'))  #print 10 best features
-
+"""
 
 # ----------------------------------
 #model = tree.DecisionTreeClassifier(max_depth=200)
@@ -54,10 +54,30 @@ model.fit(X,y)
 print(model.feature_importances_) #use inbuilt class feature_importances of tree based classifiers
 #plot graph of feature importances for better visualization
 feat_importances = pd.Series(model.feature_importances_, index=X.columns)
-print(feat_importances.nlargest(30))
-feat_importances.nlargest(30).plot(kind='barh')
+print(feat_importances.nlargest(40))
+
+feat_importances.nlargest(40).plot(kind='barh')
 #tree.plot_tree(model)  
-#plt.show()
+plt.show()
+
+
+
+
+# -----------------------------------------------
+# RESET
+plt.clf()
+del X['03e']
+model = ExtraTreesClassifier()
+model.fit(X,y)
+print(model.feature_importances_) #use inbuilt class feature_importances of tree based classifiers
+#plot graph of feature importances for better visualization
+feat_importances = pd.Series(model.feature_importances_, index=X.columns)
+print(feat_importances.nlargest(40))
+
+feat_importances.nlargest(40).plot(kind='barh')
+#tree.plot_tree(model)  
+plt.show()
+
 
 
 #-----------------------------
@@ -68,17 +88,17 @@ X_new["description"] = data["description"]
 
 print(X_new)
 
-corrmat = X_new.corr()
-top_corr_features = corrmat.index
-plt.figure(figsize=(20,20))
+#corrmat = X_new.corr()
+#top_corr_features = corrmat.index
+#plt.figure(figsize=(20,20))
 #plot heat map
-g=sns.heatmap(data[top_corr_features].corr(),annot=True,cmap="RdYlGn")
+#g=sns.heatmap(data[top_corr_features].corr(),annot=True,cmap="RdYlGn")
 #plt.show()
 
 
+
+
 """
-
-
 # ---------------------------------------
 ids = data['facilityId'][1:]
 seen = set()
@@ -93,3 +113,4 @@ for x in ids:
 
 print(len(uniq))
 print(double)
+"""
