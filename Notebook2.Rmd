@@ -1,0 +1,48 @@
+---
+title: "IDSS PW3"
+output: html_notebook
+---
+
+
+```
+GUI:
+```{r}
+library(shiny)
+
+# Define UI ----
+
+ui <- 
+
+fluidPage("Food source",
+fluidRow(
+colum(4,
+radioButtons("01a", "Food is from an approved source:",c("Yes" = "yes", "No" = "no")),
+radioButtons("01b", "Food is wholesome and free of spoilage:",c("Yes" = "yes", "No" = "no")),
+radioButtons("01c", "Cross-contamination is present:",c("Yes" = "yes", "No" = "no")),
+radioButtons("01d", "HACCP plan in use:",c("Yes" = "yes", "No" = "no")),
+radioButtons("01e", "Date markings present:",c("Yes" = "yes", "No" = "no")),
+radioButtons("01f", "Consumer advisory present:",c("Yes" = "yes", "No" = "no"))
+)))
+
+ui <- fluidPage(
+  fluidRow(
+    column(2,
+      sliderInput("obs", "Number of observations:",
+                  min = 1, max = 1000, value = 500)
+    ),
+    column(8,
+      plotOutput("distPlot")
+    )
+  )
+)
+
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+

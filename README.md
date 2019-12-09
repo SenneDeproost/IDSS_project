@@ -1,2 +1,0 @@
-# IDSS_project
-tralalala

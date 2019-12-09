@@ -1,0 +1,441 @@
+---
+title: 'Logistic Regression'
+author: "IDSS3"
+output:
+  html_document:
+    df_print: paged
+---
+
+## 1. Exploratory Data Analysis
+
+As we want to predict which variable will determine the clients who are not likely to buy the product, the id will not be useful in our model.
+
+```{r warning=FALSE, include=FALSE}
+#library(Rcmdr)
+library(ggplot2)
+library(reshape2)
+library(MASS)
+library(fitdistrplus)
+library(fBasics)
+library(effects)
+library(colorspace)
+library(corrplot)
+library(mctest)
+library(car)
+library(emmeans)
+library(multcomp)
+```
+
+we load the data and save N and D.
+
+```{r}
+data <- readXL("C:/Users/Valentin/Desktop/UPC/IDSS/PW3/Code/idss-pw3/RITCC2018.xls", 
+    rownames = FALSE, header = TRUE, 
+    na = "", sheet = "Worksheet", 
+    stringsAsFactors = TRUE)
+N = dim(data)[1]
+D = dim(data)[2]
+
+head(data)
+```
+
+We check for nans and infs and find that there is no missing data in the given dataset.
+Then we replace the missing values to have a proper dataset
+
+```{r results='hide'}
+for (i in 1:D){
+  print(all(is.finite(data[,i]))) # is finite
+  print(all(!is.nan(data[,i]))) # is not nan
+}
+```
+
+We change strings to numerical datas :
+
+```{r}
+data$facilityId <- sapply(data$facilityId, function(x) as.numeric(x)-1)
+data$recordId <- sapply(data$recordId, function(x) as.numeric(x)-1)
+data$serialNumber <- sapply(data$serialNumber, function(x) as.numeric(x)-1)
+data$serviceDesc <- sapply(data$serviceDesc, function(x) as.numeric(x)-1)
+data$peDesc <- sapply(data$peDesc, function(x) as.numeric(x)-1)
+data$category <- sapply(data$category, function(x) as.numeric(x)-1)
+data$description<- sapply(data$description, function(x) as.numeric(x)-1)
+data$county <- sapply(data$county, function(x) as.numeric(x)-1)
+data$agency <- sapply(data$agency, function(x) as.numeric(x)-1)
+data$programIdentifier <- sapply(data$programIdentifier, function(x) as.numeric(x)-1)
+data$siteAddress <- sapply(data$siteAddress, function(x) as.numeric(x)-1)
+data$city <- sapply(data$city, function(x) as.numeric(x)-1)
+data$st <- sapply(data$st, function(x) as.numeric(x)-1)
+data$activityDate <- sapply(data$activityDate, function(x) as.numeric(x)-1)
+data$zip <- sapply(data$zip, function(x) as.numeric(x)-1)
+```
+
+
+We create variables for each categories of question, and a final score
+```{r}
+#Transforming questions score to categorical question scores (from 0 to 1)
+data$X01total <- (data$X01a + data$X01b + data$X01c + data$X01d + data$X01e)/5
+data$X02total <- (data$X02a + data$X02b + data$X02c + data$X02d + data$X02e + data$X02f + data$X02g)/7
+data$X03total <- (data$X03a + data$X03b + data$X03c + data$X03d + data$X03e + data$X03f + data$X03g)/7
+data$X04total <- (data$X04a + data$X04b + data$X04c)/3
+data$X05total <- (data$X05a + data$X05b + data$X05c + data$X05d)/4
+data$X06total <- (data$X06a + data$X06b + data$X06c)/3
+data$X07total <- (data$X07a + data$X07b + data$X07c)/3
+data$X08total <- (data$X08a + data$X08b + data$X08c)/3
+data$X09total <- (data$X09a + data$X09b)/2
+data$X10total <- (data$X10a + data$I0b + data$X10c)/3
+data$X11total <- (data$X11a + data$X11b + data$X11c)/3
+data$X12total <- (data$X12a + data$X12b + data$X12c + data$X12d)/4
+data$X13total <- (data$X13a + data$X13b + data$X13c)/3
+data$X14total <- (data$X14a + data$X14b + data$X14c + data$X14d + data$X14e + data$X14f + data$X14g + data$X14h + data$X14i)/9
+data$X15total <- (data$X15a + data$X15b)/2
+
+data$finalscore <- (data$X01total + data$X02total + data$X03total + data$X04total + data$X05total + data$X06total + data$X07total + data$X08total + data$X09total + data$X10total + data$X11total + data$X12total + data$X13total + data$X14total + data$X15total)/15
+```
+
+We create a dataset containing only the predictors and the output variable:
+```{r}
+data2 <- data.frame(data$category, data$facilityId,data$recordId,data$serialNumber,data$serviceDesc,data$peDesc,data$description,data$county, data$agency,data$programIdentifier,data$siteAddress, data$st, data$city, data$activityDate ,data$zip, data$latitude, data$longitude, data$finalscore, stringsAsFactors=FALSE)
+```
+
+
+
+```{r}
+#Now that we have the variable that we want to predict (finalscore), can plot a correlation matrix:
+
+cormat <- round(cor(data2),4)
+head(cormat)
+
+melted_cormat <- melt(cormat)
+head(melted_cormat)
+
+ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile()
+
+
+# nummeric
+Boxplot(X01total~peDesc,data=data,col=c(2))
+Boxplot(X02total~peDesc,data=data,col=c(2))
+Boxplot(X03total~peDesc,data=data,col=c(2))
+Boxplot(finalscore~peDesc,data=data,col=c(2))
+
+```
+
+------------- !!!!!!  FOLLOWING IS NOT USED IN THE PROJECT YET
+
+
+
+We observe that for loan and housing the datapoints in the unknown category are exactly the same. The intuition makes sense since everyone where you have no infromation about the house it's unlikely that you have information about the loan. We also see that both variables have across their categories the same amount of 0 and 1's. Thus there is no information in these variables and we drop them.
+
+Furthermore we observe that previous and poutcome are highly correlated since the previous campaign result is almost always nonexistent if the client was never called before. We exclude each one of them and check which model has the higher R-squared. As a result we drop the previous feature. Almost the same argumentation is used to drop pdays because if a client was never previously contacted it also never recieved a call before. The R-squared of the model with poutcome is a bit higher, so we keep poutcome.
+
+The variable month has a very high VIF value and we think that it does't make so much sense to include it in the model since the time of the call should not influence the behaviour of the client to much. The same goes for day_of_week, which is why we drop these two variables.
+
+According to the VIF values job and education are kind of correlated which intuitively makes sense. The model with job has a little higher R square, so we keep job and drop education.
+
+```{r}
+#table(data$loan)
+un1 <- subset(data, loan=='unknown')
+#table(data$housing)
+un2 <- subset(data, housing=='unknown')
+all(un1 == un2)
+data$loan <- NULL
+data$housing <- NULL
+
+#table(data$poutcome)
+#table(data$previous)
+print(summary(lm(y~.-poutcome, data))$r.square)
+print(summary(lm(y~.-previous, data))$r.square) # a little bit higher
+data$previous <- NULL
+
+#table(data$poutcome)
+#table(data$pdays)
+print(summary(lm(y~.-poutcome, data))$r.square)
+print(summary(lm(y~.-pdays, data))$r.square) # without pdays is a little higher so drop it
+data$pdays <- NULL
+
+#car::vif(lm(y~., data=data)) # has very high vif and no senseful meaning so exclude
+data$month <- NULL
+data$day_of_week <- NULL
+
+#car::vif(lm(y~., data=data))
+print(summary(lm(y~.-job, data))$r.square)
+print(summary(lm(y~.-education, data))$r.square)
+data$education <- NULL
+
+head(data, 3)
+```
+
+Now we check for multicollinearity in the numerical variables. We find that euribor3m, emp.var.rate and nr.employed are highly correlated, so we drop the first two because they lead to a smaller R-squared. At the end all the VIF values are close to 1, so there are no more mayor correlations.
+
+```{r}
+dnum <- data[, c(1, 8, 9, 10, 11, 12, 13)]
+pairs(dnum)
+cor1 = cor(dnum)
+corrplot.mixed(cor1, lower.col = 'black')
+car::vif(lm(y~.,dnum))
+
+print(summary(lm(y~.-euribor3m-nr.employed, dnum))$r.square)
+print(summary(lm(y~.-euribor3m-emp.var.rate, dnum))$r.square)
+print(summary(lm(y~.-nr.employed-emp.var.rate, dnum))$r.square)
+dnum$emp.var.rate <- NULL
+dnum$euribor3m <- NULL
+
+cor1 = cor(dnum)
+corrplot.mixed(cor1, lower.col = 'black')
+car::vif(lm(y~.,dnum))
+
+data$emp.var.rate <- NULL
+data$euribor3m <- NULL
+
+car::vif(lm(y~.,data))
+
+head(data, 3)
+```
+
+Our exploratory analysis results in a model with the following variables:
+
+* numerical:
+- age
+- cons.price.idx
+- cons.conf.idx
+- nr.employed
+
+* categroical:
+- job
+- marital
+- default
+- contact
+- campaign
+- poutcome
+
+## 2.Fitting the complete model
+
+We fit the complete model using the original variables without interactions and using the logit link function.
+
+```{r}
+head(data2,10)
+
+model <- glm(data.finalscore ~ ., family = binomial(link = "logit"), data=data2)
+summary(model)
+```
+
+
+## 3. Evaluating interactions
+
+We evaluate possible first order interactions (between two factors or between a factor and a covariable) and include them in the model. 
+We find the significant interactions by visual analysis. If the lines of the effect plot are parallel then there is no significant interaction. If the lines cross each other the interaction is disordinal and there is no way to interpret the main effects anymore. We include only the ordinal interactions (where the lines don't cross and are not parallel).
+
+We start with the interactions between factors. For the analysis we plot the effects of a model fitted with the interaction of two factors. We iterate over all combinations of factors and find as ordinal significant interaction only the contact:poutcome interaction.
+
+[source: https://pages.uoregon.edu/stevensj/interaction.pdf]
+
+* no significant interaction:
+- job:martial
+- job:default
+- job:campaign
+- martial:default
+- marital:contact
+- marital:campaign
+- marital:poutcome
+- default:contact
+- default:campaign
+- default:poutcome
+- contact:campaign
+- campaign:poutcome
+
+* significant interaction:
+- job:contact (disordinal)
+- job:poutcome (disordinal)
+- contact:poutcome (ordinal)
+
+```{r}
+
+# factor x factor ANOVA with 2-factors
+ff1 <- glm(y ~ job * contact, family = binomial(link = "logit"), data=data)
+em <- emmeans(ff1,~ job * contact)
+#cld(em)
+plot(em)
+plot(allEffects(ff1))
+emmip(ff1, job ~ contact, CIs=TRUE)
+print(Anova(ff1))
+
+ff2 <- glm(y ~ job * poutcome, family = binomial(link = "logit"), data=data)
+em <- emmeans(ff2,~ job * poutcome)
+#cld(em)
+plot(em)
+plot(allEffects(ff2))
+emmip(ff2, job ~ poutcome, CIs=TRUE)
+print(Anova(ff2))
+
+ff3 <- glm(y ~ contact * poutcome, family = binomial(link = "logit"), data=data)
+em <- emmeans(ff3,~ contact * poutcome)
+#cld(em)
+plot(em)
+plot(allEffects(ff3))
+emmip(ff3, contact ~ poutcome, CIs=TRUE)
+print(Anova(ff3))
+```
+
+For the interaction between factors and numerical varaibles we use the ANCOVA analysis and follow the same procedure as above. As significant ordinal interactions we find the cons.conf.idx:contact and the nr.employed:contact interactions.
+
+* no significant interaction
+- age:default
+- age:contact
+- age:campaign
+- age:poutcome
+- cons.price.idx:job
+- cons.price.idx:marital
+- cons.price.idx:default
+- cons.price.idx:campaign
+- cons.conf.idx:marital
+- cons.conf.idx:default
+- cons.conf.idx:campaign
+- nr.employed:job
+- nr.employed:marital
+- nr.employed:default
+- nr.employed:campaign
+- nr.employed:poutcome
+
+* significant interaction
+- age:job (disordinal)
+- age:marital (disordinal)
+- cons.price.idx:contact (disordinal)
+- cons.price.idx:poutcome (disordinal)
+- cons.conf.idx:job (disordinal)
+- cons.conf.idx:contact (ordinal)
+- cons.conf.idx:poutcome (disordinal)
+- nr.employed:contact (ordinal)
+
+```{r}
+# factor x numerical ANCOVA
+
+#age: c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
+#cons.price.idx: c(90, 91, 92, 93, 94, 95, 96)
+#cons.conf.idx:  c(-51, -45, - 40, -35, -30, -25)
+#nr.employed: c(4946, 5000, 5050, 5100, 5150, 5200, 5228)
+
+fc1 <- glm(y ~ job * age, family = binomial(link = "logit"), data=data)
+emmip(fc1, job ~ age, at=list(age=c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)), CIs=TRUE)
+print(Anova(fc1))
+
+fc2 <- glm(y ~ marital * age, family = binomial(link = "logit"), data=data)
+emmip(fc2, marital ~ age, at=list(age=c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)), CIs=TRUE)
+print(Anova(fc2))
+
+fc3 <- glm(y ~ contact * cons.price.idx, family = binomial(link = "logit"), data=data)
+emmip(fc3, contact ~ cons.price.idx, at=list(cons.price.idx=c(90, 91, 92, 93, 94, 95, 96)), CIs=TRUE)
+print(Anova(fc3))
+
+fc4 <- glm(y ~ poutcome * cons.price.idx, family = binomial(link = "logit"), data=data)
+emmip(fc4, poutcome ~ cons.price.idx, at=list(cons.price.idx=c(90, 91, 92, 93, 94, 95, 96)), CIs=TRUE)
+print(Anova(fc4))
+
+fc5 <- glm(y ~ job * cons.conf.idx, family = binomial(link = "logit"), data=data)
+emmip(fc5, job ~ cons.conf.idx, at=list(cons.conf.idx=c(-51, -45, - 40, -35, -30, -25)), CIs=TRUE)
+print(Anova(fc5))
+
+fc6 <- glm(y ~ contact * cons.conf.idx, family = binomial(link = "logit"), data=data)
+emmip(fc6, contact ~ cons.conf.idx, at=list(cons.conf.idx=c(-51, -45, - 40, -35, -30, -25)), CIs=TRUE)
+print(Anova(fc6))
+
+fc7 <- glm(y ~ poutcome * cons.conf.idx, family = binomial(link = "logit"), data=data)
+emmip(fc7, poutcome ~ cons.conf.idx, at=list(cons.conf.idx=c(-51, -45, - 40, -35, -30, -25)), CIs=TRUE)
+print(Anova(fc7))
+
+fc8 <- glm(y ~ contact * nr.employed, family = binomial(link = "logit"), data=data)
+emmip(fc8, contact ~ nr.employed, at=list(nr.employed=c(4946, 5000, 5050, 5100, 5150, 5200, 5228)), CIs=TRUE)
+print(Anova(fc8))
+```
+
+In the following part we include only the significant and ordinal interactions in the model.
+
+## 4. Variable selection
+
+We fit the full model with all the main variables and the found interactions.
+
+```{r}
+full_model <- glm(y ~ . + contact * poutcome + cons.conf.idx * contact + nr.employed * contact, family = binomial(link = "logit"), data=data)
+summary(full_model)
+```
+
+We perform an automatic variables selection based on the AIC & BIC and make a comparison of the models and argue which one is chosen.
+
+First we fit the model using the stepwise procedure reducing the full model to a simpler model using the AIC criterium. 
+
+```{r results='hide'}
+model_aic <- step(model, direct ='both')
+```
+
+Then we do the same using the BIC criterium [k = log(N)].
+
+```{r results='hide'}
+model_bic <- step(model, direct ='both', k = log(N))
+```
+
+We take a look at the two models.
+
+```{r}
+summary(model_aic)
+```
+
+```{r}
+summary(model_bic)
+```
+
+We find that the BIC model is a lot simpler than the one choosen using the AIC criterium, so we decide to continue our work with the BIC model.
+
+```{r eval=FALSE, include=FALSE}
+# this compares if it's useful to add the variables and if that is significant
+anova(model_bic, model_aic, test="Chisq")
+waldtest(model_aic, model_bic, test = "Chisq") # Wald Test
+```
+
+## 5. Validation
+
+We validate the model by checking the assumptions:
+
+- The outcome is a binary or dichotomous variable like yes vs no, positive vs negative, 1 vs 0.
+----> In our model, the output is a binary Y/N response.
+
+- There is a linear relationship between the logit of the outcome and each predictor variables.
+----> As we can validate from the following plots, there is a linear relationship between the logit of the outcome and each predictor variables. (see marginal model plots)
+
+- There is no influential values (extreme values or outliers) in the continuous predictors
+----> As we've seen previously, we don't have extreme outliers in the continuous predictors. (see plot of outliers)
+
+- There is no high intercorrelations (i.e. multicollinearity) among the predictors.
+----> We previously analysed intercorrelations and removed useless variables. We can observe th non-multicollinearity on the previous correlation heatmap.
+
+```{r warning=FALSE}
+m <- model_bic
+marginalModelPlots(m)
+residualPlots(m)
+influenceIndexPlot(m)
+```
+
+All the assumptions of our logistic regression have been validated.
+
+## 6. Interpretation
+
+In the final model that we built (bic), we've used the following those variables:
+
+* numerical:
+- cons.conf.idx
+- nr.employed
+
+* categorical:
+- default
+- contact
+- poutcome
+
+* interactions: 
+- contact:cons.conf.idx  
+- contact:nr.employed
+
+
+The output variable is describing the fact that a client is likely (or not) to subscribe a deposit. As we've seen in our model,, we know that if a client is a defaulter, there is lower chances for him to be interested by our product, which is logical because it costs him money.
+
+An interesting fact, is that we have more chances for the client to subscribe if we contact them by cellular than telephone. This is mainly due to the fact that cellular offers less chances of ending on voicemail. Also ; and it seems logical; we've seen that there is way less chances for a contact to suceed if the client already subscribed at the previous campaign, because it is rare that you want to subscribe two times in a row.
+
+The analysis of this model allowed us to discover that some social/economic indicators can influe on the client behavior. When the social/economical context is good (high consumer confidence, good employment), there is more chances for a client to subscribe since the context is favorable.
+
