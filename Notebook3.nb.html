@@ -1760,55 +1760,37 @@ summary {
 &lt;!-- rnb-chunk-begin --&gt;
 
 
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzaGlueSlcblxuIyBEZWZpbmUgVUkgLS0tLVxuXG51aSA8LSBmbHVpZFBhZ2UoXCJGb29kIHNvdXJjZVwiLFxuZmx1aWRSb3coXG5jb2x1bW4oMTAsXG5yYWRpb0J1dHRvbnMoXCIwMWFcIiwgXCJGb29kIGlzIGZyb20gYW4gYXBwcm92ZWQgc291cmNlOlwiLGMoXCJZZXNcIiA9IFwieWVzXCIsIFwiTm9cIiA9IFwibm9cIikpLFxucmFkaW9CdXR0b25zKFwiMDFiXCIsIFwiRm9vZCBpcyB3aG9sZXNvbWUgYW5kIGZyZWUgb2Ygc3BvaWxhZ2U6XCIsYyhcIlllc1wiID0gXCJ5ZXNcIiwgXCJOb1wiID0gXCJub1wiKSksXG5yYWRpb0J1dHRvbnMoXCIwMWNcIiwgXCJDcm9zcy1jb250YW1pbmF0aW9uIGlzIHByZXNlbnQ6XCIsYyhcIlllc1wiID0gXCJ5ZXNcIiwgXCJOb1wiID0gXCJub1wiKSksXG5yYWRpb0J1dHRvbnMoXCIwMWRcIiwgXCJIQUNDUCBwbGFuIGluIHVzZTpcIixjKFwiWWVzXCIgPSBcInllc1wiLCBcIk5vXCIgPSBcIm5vXCIpKSxcbnJhZGlvQnV0dG9ucyhcIjAxZVwiLCBcIkRhdGUgbWFya2luZ3MgcHJlc2VudDpcIixjKFwiWWVzXCIgPSBcInllc1wiLCBcIk5vXCIgPSBcIm5vXCIpKSxcbnJhZGlvQnV0dG9ucyhcIjAxZlwiLCBcIkNvbnN1bWVyIGFkdmlzb3J5IHByZXNlbnQ6XCIsYyhcIlllc1wiID0gXCJ5ZXNcIiwgXCJOb1wiID0gXCJub1wiKSkpLFxuY29sdW1uKDEwLCByYWRpb0J1dHRvbnMoXCIwMWRcIiwgXCJIQUNDUCBwbGFuIGluIHVzZTpcIixjKFwiWWVzXCIgPSBcInllc1wiLCBcIk5vXCIgPSBcIm5vXCIpKSlcbikpXG5cblxuXG5cbiMgRGVmaW5lIHNlcnZlciBsb2dpYyAtLS0tXG5zZXJ2ZXIgPC0gZnVuY3Rpb24oaW5wdXQsIG91dHB1dCkge1xuICBcbn1cblxuIyBSdW4gdGhlIGFwcCAtLS0tXG5zaGlueUFwcCh1aSA9IHVpLCBzZXJ2ZXIgPSBzZXJ2ZXIpXG5gYGAifQ== --&gt;
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzaGlueSlcblxuXG4jIERlZmluZSBVSSAtLS0tXG5cbnVpIDwtIGZsdWlkUGFnZShcbiAgYWN0aW9uQnV0dG9uKFwiYWRkXCIsIFwiQWRkIFVJXCIpXG4pXG5cbiMgU2VydmVyIGxvZ2ljXG5zZXJ2ZXIgPC0gZnVuY3Rpb24oaW5wdXQsIG91dHB1dCwgc2Vzc2lvbikge1xuICBvYnNlcnZlRXZlbnQoaW5wdXQkYWRkLCB7XG4gICAgaW5zZXJ0VUkoXG4gICAgICBzZWxlY3RvciA9IFwiI2FkZFwiLFxuICAgICAgd2hlcmUgPSBcImFmdGVyRW5kXCIsXG4gICAgICB1aSA9IHRleHRJbnB1dChwYXN0ZTAoXCJ0eHRcIiwgaW5wdXQkYWRkKSxcbiAgICAgICAgICAgICAgICAgICAgIFwiSW5zZXJ0IHNvbWUgdGV4dFwiKVxuICAgIClcbiAgfSlcbn1cblxuIyBDb21wbGV0ZSBhcHAgd2l0aCBVSSBhbmQgc2VydmVyIGNvbXBvbmVudHNcbnNoaW55QXBwKHVpLCBzZXJ2ZXIpXG5gYGAifQ== --&gt;
 
 ```r
 library(shiny)
 
+
 # Define UI ----
 
-ui &lt;- fluidPage(&quot;Food source&quot;,
-fluidRow(
-column(10,
-radioButtons(&quot;01a&quot;, &quot;Food is from an approved source:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)),
-radioButtons(&quot;01b&quot;, &quot;Food is wholesome and free of spoilage:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)),
-radioButtons(&quot;01c&quot;, &quot;Cross-contamination is present:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)),
-radioButtons(&quot;01d&quot;, &quot;HACCP plan in use:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)),
-radioButtons(&quot;01e&quot;, &quot;Date markings present:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)),
-radioButtons(&quot;01f&quot;, &quot;Consumer advisory present:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;))),
-column(10, radioButtons(&quot;01d&quot;, &quot;HACCP plan in use:&quot;,c(&quot;Yes&quot; = &quot;yes&quot;, &quot;No&quot; = &quot;no&quot;)))
-))
+ui &lt;- fluidPage(
+  actionButton(&quot;add&quot;, &quot;Add UI&quot;)
+)
 
-
-
-
-# Define server logic ----
-server &lt;- function(input, output) {
-  
+# Server logic
+server &lt;- function(input, output, session) {
+  observeEvent(input$add, {
+    insertUI(
+      selector = &quot;#add&quot;,
+      where = &quot;afterEnd&quot;,
+      ui = textInput(paste0(&quot;txt&quot;, input$add),
+                     &quot;Insert some text&quot;)
+    )
+  })
 }
 
-# Run the app ----
-shinyApp(ui = ui, server = server)</code></pre>
+# Complete app with UI and server components
+shinyApp(ui, server)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>server = function(input, output){</p>
-</div>
-<div id="server-code" class="section level1">
-<h1>server code</h1>
-<p>}</p>
-<p>ui = fluidPage(</p>
-<p>fluidRow( column(2, wellPanel(p(“Column width 2”))), column(10, wellPanel(p(“Column width 10”)))), fluidRow( column(4, wellPanel(p(“Column width 4”))), column(4, wellPanel(p(“Column width 4”))), column(4, wellPanel(p(“Column width 4”)))) )</p>
-<p>ui = fluidPage()</p>
-<p>shinyApp(ui = ui, server = server)</p>
-</div>
-<div id="complete-app-with-ui-and-server-components" class="section level1">
-<h1>Complete app with UI and server components</h1>
-<p>shinyApp(ui, server)</p>
-<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiSURTUyBQVzMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMgUmVhZCBpbiBjc3YgZmlsZXMKcXVlc3Rpb25zIDwtIHJlYWQudGFibGUoImRhdGEvd2VpZ2h0cy5jc3YiLCAKICAgICAgICAgICAgICAgICBoZWFkZXIgPSBGQUxTRSwKICAgICAgICAgICAgICAgICBzZXAgPSAiLCIpCgoKCgpgYGAKR1VJOgpgYGB7cn0KbGlicmFyeShzaGlueSkKCiMgRGVmaW5lIFVJIC0tLS0KCnVpIDwtIGZsdWlkUGFnZSgiRm9vZCBzb3VyY2UiLApmbHVpZFJvdygKY29sdW1uKDEwLApyYWRpb0J1dHRvbnMoIjAxYSIsICJGb29kIGlzIGZyb20gYW4gYXBwcm92ZWQgc291cmNlOiIsYygiWWVzIiA9ICJ5ZXMiLCAiTm8iID0gIm5vIikpLApyYWRpb0J1dHRvbnMoIjAxYiIsICJGb29kIGlzIHdob2xlc29tZSBhbmQgZnJlZSBvZiBzcG9pbGFnZToiLGMoIlllcyIgPSAieWVzIiwgIk5vIiA9ICJubyIpKSwKcmFkaW9CdXR0b25zKCIwMWMiLCAiQ3Jvc3MtY29udGFtaW5hdGlvbiBpcyBwcmVzZW50OiIsYygiWWVzIiA9ICJ5ZXMiLCAiTm8iID0gIm5vIikpLApyYWRpb0J1dHRvbnMoIjAxZCIsICJIQUNDUCBwbGFuIGluIHVzZToiLGMoIlllcyIgPSAieWVzIiwgIk5vIiA9ICJubyIpKSwKcmFkaW9CdXR0b25zKCIwMWUiLCAiRGF0ZSBtYXJraW5ncyBwcmVzZW50OiIsYygiWWVzIiA9ICJ5ZXMiLCAiTm8iID0gIm5vIikpLApyYWRpb0J1dHRvbnMoIjAxZiIsICJDb25zdW1lciBhZHZpc29yeSBwcmVzZW50OiIsYygiWWVzIiA9ICJ5ZXMiLCAiTm8iID0gIm5vIikpKSwKY29sdW1uKDEwLCByYWRpb0J1dHRvbnMoIjAxZCIsICJIQUNDUCBwbGFuIGluIHVzZToiLGMoIlllcyIgPSAieWVzIiwgIk5vIiA9ICJubyIpKSkKKSkKCgoKCiMgRGVmaW5lIHNlcnZlciBsb2dpYyAtLS0tCnNlcnZlciA8LSBmdW5jdGlvbihpbnB1dCwgb3V0cHV0KSB7CiAgCn0KCiMgUnVuIHRoZSBhcHAgLS0tLQpzaGlueUFwcCh1aSA9IHVpLCBzZXJ2ZXIgPSBzZXJ2ZXIpCmBgYAoKCgpzZXJ2ZXIgPSBmdW5jdGlvbihpbnB1dCwgb3V0cHV0KXsgICAgCgojIHNlcnZlciBjb2RlCn0KCnVpID0gZmx1aWRQYWdlKAoKZmx1aWRSb3coCmNvbHVtbigyLCB3ZWxsUGFuZWwocCgiQ29sdW1uIHdpZHRoIDIiKSkpLApjb2x1bW4oMTAsIHdlbGxQYW5lbChwKCJDb2x1bW4gd2lkdGggMTAiKSkpKSwKZmx1aWRSb3coCmNvbHVtbig0LCB3ZWxsUGFuZWwocCgiQ29sdW1uIHdpZHRoIDQiKSkpLApjb2x1bW4oNCwgd2VsbFBhbmVsKHAoIkNvbHVtbiB3aWR0aCA0IikpKSwKY29sdW1uKDQsIHdlbGxQYW5lbChwKCJDb2x1bW4gd2lkdGggNCIpKSkpCikKCgp1aSA9IGZsdWlkUGFnZSgpCgpzaGlueUFwcCh1aSA9IHVpLCBzZXJ2ZXIgPSBzZXJ2ZXIpCgojIENvbXBsZXRlIGFwcCB3aXRoIFVJIGFuZCBzZXJ2ZXIgY29tcG9uZW50cwpzaGlueUFwcCh1aSwgc2VydmVyKQoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSURTUyBQVzMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMgUmVhZCBpbiBjc3YgZmlsZXMKcXVlc3Rpb25zIDwtIHJlYWQudGFibGUoImRhdGEvd2VpZ2h0cy5jc3YiLCAKICAgICAgICAgICAgICAgICBoZWFkZXIgPSBGQUxTRSwKICAgICAgICAgICAgICAgICBzZXAgPSAiLCIpCgoKCgpgYGAKR1VJOgpgYGB7cn0KbGlicmFyeShzaGlueSkKCgojIERlZmluZSBVSSAtLS0tCgp1aSA8LSBmbHVpZFBhZ2UoCiAgYWN0aW9uQnV0dG9uKCJhZGQiLCAiQWRkIFVJIikKKQoKIyBTZXJ2ZXIgbG9naWMKc2VydmVyIDwtIGZ1bmN0aW9uKGlucHV0LCBvdXRwdXQsIHNlc3Npb24pIHsKICBvYnNlcnZlRXZlbnQoaW5wdXQkYWRkLCB7CiAgICBpbnNlcnRVSSgKICAgICAgc2VsZWN0b3IgPSAiI2FkZCIsCiAgICAgIHdoZXJlID0gImFmdGVyRW5kIiwKICAgICAgdWkgPSB0ZXh0SW5wdXQocGFzdGUwKCJ0eHQiLCBpbnB1dCRhZGQpLAogICAgICAgICAgICAgICAgICAgICAiSW5zZXJ0IHNvbWUgdGV4dCIpCiAgICApCiAgfSkKfQoKIyBDb21wbGV0ZSBhcHAgd2l0aCBVSSBhbmQgc2VydmVyIGNvbXBvbmVudHMKc2hpbnlBcHAodWksIHNlcnZlcik=</div>
 
 
 
@@ -1855,7 +1837,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Notebook2.Rmd");
+  window.initializeSourceEmbed("Notebook3.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

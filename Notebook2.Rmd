@@ -3,6 +3,13 @@ title: "IDSS PW3"
 output: html_notebook
 ---
 
+# Read in csv files
+questions <- read.table("data/weights.csv", 
+                 header = FALSE,
+                 sep = ",")
+
+
+
 
 ```
 GUI:
@@ -11,30 +18,19 @@ library(shiny)
 
 # Define UI ----
 
-ui <- 
-
-fluidPage("Food source",
+ui <- fluidPage("Food source",
 fluidRow(
-colum(4,
+column(10,
 radioButtons("01a", "Food is from an approved source:",c("Yes" = "yes", "No" = "no")),
 radioButtons("01b", "Food is wholesome and free of spoilage:",c("Yes" = "yes", "No" = "no")),
 radioButtons("01c", "Cross-contamination is present:",c("Yes" = "yes", "No" = "no")),
 radioButtons("01d", "HACCP plan in use:",c("Yes" = "yes", "No" = "no")),
 radioButtons("01e", "Date markings present:",c("Yes" = "yes", "No" = "no")),
-radioButtons("01f", "Consumer advisory present:",c("Yes" = "yes", "No" = "no"))
-)))
+radioButtons("01f", "Consumer advisory present:",c("Yes" = "yes", "No" = "no"))),
+column(10, radioButtons("01d", "HACCP plan in use:",c("Yes" = "yes", "No" = "no")))
+))
 
-ui <- fluidPage(
-  fluidRow(
-    column(2,
-      sliderInput("obs", "Number of observations:",
-                  min = 1, max = 1000, value = 500)
-    ),
-    column(8,
-      plotOutput("distPlot")
-    )
-  )
-)
+
 
 
 # Define server logic ----
@@ -45,4 +41,30 @@ server <- function(input, output) {
 # Run the app ----
 shinyApp(ui = ui, server = server)
 ```
+
+
+
+server = function(input, output){    
+
+# server code
+}
+
+ui = fluidPage(
+
+fluidRow(
+column(2, wellPanel(p("Column width 2"))),
+column(10, wellPanel(p("Column width 10")))),
+fluidRow(
+column(4, wellPanel(p("Column width 4"))),
+column(4, wellPanel(p("Column width 4"))),
+column(4, wellPanel(p("Column width 4"))))
+)
+
+
+ui = fluidPage()
+
+shinyApp(ui = ui, server = server)
+
+# Complete app with UI and server components
+shinyApp(ui, server)
 
