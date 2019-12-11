@@ -17,23 +17,242 @@ GUI:
 library(shiny)
 
 
-# Define UI ----
-
-ui <- fluidPage(
-  actionButton("add", "Add UI")
-)
-
-# Server logic
-server <- function(input, output, session) {
-  observeEvent(input$add, {
-    insertUI(
-      selector = "#add",
-      where = "afterEnd",
-      ui = textInput(paste0("txt", input$add),
-                     "Insert some text")
-    )
-  })
+counter <- 2
+give_question <- function(){
+  res <- radioButtons(questions[counter, ][1], questions[counter, ][1] ,c("Yes" = "yes", "No" = "no"))
+  counter <<- counter + 1
+  res
 }
 
-# Complete app with UI and server components
+
+# Define UI ----
+ui <- fluidPage(
+
+
+
+
+tabsetPanel(type = "tabs",
+
+
+tabPanel(h6("Food source"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question()
+      )
+    )
+  ),
+    
+    
+tabPanel(h6("Personnel"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Food temperature"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question()
+      )
+    )
+    ),
+    
+  tabPanel(h6("Sanitization rinse"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Sewage"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Hand washing and toilet"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Pest control"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Toxic items"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Food labeling and protection"),
+  fluidPage(
+    column(width = 4,
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Equipment design, construction"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+
+tabPanel(h6("Testing devices"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Equipment cleaning"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Utensils"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Physical facilities"),
+  fluidPage(
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question(),
+      give_question(),
+      give_question()
+      ),
+    column(width = 4,
+      give_question(),
+      give_question(),
+      give_question(),
+      give_question()
+      )
+    )
+    ),
+    
+tabPanel(h6("Other operations"),
+  fluidPage(
+    column(width = 4,
+      give_question()
+      ),
+    column(width = 4,
+      give_question()
+      )
+    )
+    )
+
+    
+    
+    
+    
+    
+)
+
+
+
+
+)
+
+
+
+
+server <- function(input, output) {
+
+  
+}
+
+
 shinyApp(ui, server)
+
+
