@@ -1,63 +1,63 @@
 id,weights,fu_weights,question
-01A,15,18,
-01B,15,18,
-01C,20,24,
-01D,15,18,
-01E,5,6,
-01F,5,6,
-02A,20,24,
-02B,20,24,
-02C,20,24,
-02D,5,6,
-02E,10,12,
-02F,15,18,
-02G,20,24,
-03A,20,24,
-03B,20,24,
-03C,15,18,
-03D,20,24,
-03E,15,18,
-03F,5,6,
-03G,20,24,
-04A,10,12,
-04B,10,12,
-04C,10,12,
-05A,15,18,
-05B,10,12,
-05C,10,12,
-05D,15,18,
-06A,15,18,
-06B,10,12,
-06C,5,6,
-07A,10,12,
-07B,15,18,
-07C,5,6,
-08A,10,12,
-08B,5,6,
-08D,15,18,
-09A,1,2,
-09B,2,4,
-10A,2,4,
-10B,1,2,
-10C,2,4,
-11A,1,2,
-11B,1,2,
-11C,1,2,
-12A,2,4,
-12B,1,2,
-12C,2,4,
-12D,1,2,
-13A,1,2,
-13B,1,2,
-13C,2,4,
-14A,1,2,
-14B,2,4,
-14C,1,2,
-14D,1,2,
-14E,1,2,
-14F,1,2,
-14G,1,2,
-14H,1,2,
-14I,1,2,
-15A,1,2,
-15B,1,2,
+01A,15,18,Is the food from approved sources?
+01B,15,18,Is the food wholesome and free of spoilage?
+01C,20,24,Is cross-contamination present?
+01D,15,18,Is there a HACCP plan present?
+01E,5,6,Are the date markings present?
+01F,5,6,Does the establishment provide consumer advisory?
+02A,20,24,Are infectasious infectious at work?
+02B,20,24,"When wounds are present, are they properly covered?"
+02C,20,24,Are hands always washed as needed?
+02D,5,6,Are hygienic practices enforced?
+02E,10,12,"Does personnel smole, eat or drink during the job?"
+02F,15,18,Is there more personnel training needed?
+02G,20,24,Is there bare hand contact?
+03A,20,24,Food is rapidly cooled to 41°F or lower
+03B,20,24,Food is rapidly reheated to 165°F or greater
+03C,15,18,Hot hold at 135°F or greater
+03D,20,24,Is the food cooked at the required temperature?
+03E,15,18,Cold hold at 41°F or lower
+03F,5,6,Is a probed food thermometer in use?
+03G,20,24,Is adequate equipment present to maintain food temperatures?
+04A,10,12,Is there a manual for sanitization present?
+04B,10,12,Are machines sanitized?
+04C,10,12,Is the rinse in place?
+05A,15,18,Is water originating from safe sources?
+05B,10,12,Is hot and cold water under pressure?
+05C,10,12,Is sewage backflow possible?
+05D,15,18,Is sewage correctly disposed?
+06A,15,18,Are toilet facilities properly integrated?
+06B,10,12,Is sanitary accesible?
+06C,5,6,Are soap and drying devices present?
+07A,10,12,Is there evidence of pests?
+07B,15,18,Is a pesticide application present?
+07C,5,6,Are animals prohibited?
+08A,10,12,Are toxic items properly stored?
+08B,5,6,Are toxic items properly labeled?
+08D,15,18,Are toxic items properly used?
+09A,1,2,Is the original container properly labeled?
+09B,2,4,If food protected from contamination?
+10A,2,4,Is food-contact surfaces equipment well designed?
+10B,1,2,Is nonfood-contact surfaces equipment well designed?
+10C,2,4,Are dishwashing facilities properly constructed?
+11A,1,2,Is there a refrigeration unit present with accurate thermomers?
+11B,1,2,Is the dishmachine equiped with accurate thermometer and gauge cock?
+11C,1,2,Is a chemical test kit accessible?
+12A,2,4,Is food-contact surfaces equipment well cleaned?
+12B,1,2,Is nonfood-contact surfaces equipment well cleaned?
+12C,2,4,Are diswashing operations clean?
+12D,1,2,Are wiping cloths present?
+13A,1,2,"Are utensils provided, stored and used?"
+13B,1,2,"Are single-use articles stored, dispensed and used?"
+13C,2,4,Are there no re-use of single-service articles present?
+14A,1,2,Is plumbing installed and maintained?
+14B,2,4,Are there garbage and refuse facilities present?
+14C,1,2,"Are floors, walls and ceilings well equiped?"
+14D,1,2,Is enough lightning present?
+14E,1,2,Is ventilation present?
+14F,1,2,Are locker rooms present?
+14G,1,2,Is premises maintained?
+14H,1,2,Is there seperation of living and laundry places?
+14I,1,2,Are restroom facilities present?
+15A,1,2,Personel wears clean clothes and uses hair restraints?
+15B,1,2,Are linen properly stored?

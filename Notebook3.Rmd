@@ -19,7 +19,7 @@ library(shiny)
 
 counter <- 2
 give_question <- function(){
-  res <- radioButtons(questions[counter, ][1], questions[counter, ][1] ,c("Yes" = "yes", "No" = "no"))
+  res <- radioButtons(questions[counter, ][1], questions[counter, ][4] ,c("G" = "g", "Yes" = "yes", "No" = "no"))
   counter <<- counter + 1
   res
 }
